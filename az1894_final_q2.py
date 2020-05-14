@@ -9,16 +9,16 @@ def count_mono_data_subtrees(bin_tree):
         if root is None:
             return True
 
-        left = count_mono_data_subtrees_helper(root.left) # True if left is a mono subtree
-        right = count_mono_data_subtrees_helper(root.right)  # True if right is a mono subtree
+        leftmono = count_mono_data_subtrees_helper(root.left) # True if left is a mono subtree
+        rightmono = count_mono_data_subtrees_helper(root.right)  # True if right is a mono subtree
 
-        if left == False or right == False:
+        if leftmono == False or rightmono == False:
             return False
 
-        if root.left and root.left.data != root.data:
+        if root.left != None and root.left.data != root.data:
             return False
 
-        if root.right and root.right.data != root.data:
+        if root.right != None and root.right.data != root.data:
             return False
 
         count += 1
@@ -28,23 +28,24 @@ def count_mono_data_subtrees(bin_tree):
 
     return count
 
-leaf7 = LinkedBinaryTree.Node(7)
+l54 = LinkedBinaryTree.Node(4)
+l5_24 = LinkedBinaryTree.Node(4)
 
-leaf8 = LinkedBinaryTree.Node(8)
-test7 = LinkedBinaryTree.Node(7)
+l47 = LinkedBinaryTree.Node(7)
+l44 = LinkedBinaryTree.Node(4)
+l4_24 = LinkedBinaryTree.Node(4, l54, l5_24)
+l48 = LinkedBinaryTree.Node(8)
 
+l37 = LinkedBinaryTree.Node(7, l47, None)
+l34 = LinkedBinaryTree.Node(4, l44, l4_24)
+l35 = LinkedBinaryTree.Node(5, None, l48)
 
+l23 = LinkedBinaryTree.Node(3, l37, None)
+l2_23 = LinkedBinaryTree.Node(3, l34, l35)
 
-
-root7 = LinkedBinaryTree.Node(7, leaf7, test7)
-root4 = LinkedBinaryTree.Node(4, None, None)
-root5 = LinkedBinaryTree.Node(5, None, leaf8)
-
-root3 = LinkedBinaryTree.Node(3, root7, None)
-root3_2 = LinkedBinaryTree.Node(3, root4, root5)
-
-baseroot = LinkedBinaryTree.Node(1, None, None)
+baseroot = LinkedBinaryTree.Node(1, l23, l2_23)
 
 base = LinkedBinaryTree(root = baseroot)
 
 print(count_mono_data_subtrees(base))
+
