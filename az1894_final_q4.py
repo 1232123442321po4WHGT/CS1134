@@ -1,3 +1,4 @@
+
 class LinkMinHeap:
     class Node:
         def __init__(self, item):
@@ -21,14 +22,7 @@ class LinkMinHeap:
     def __len__(self):
         return self.size
 
-    def is_empty(self):
-        return self.size == 0
-
-    def min(self):
-        if self.is_empty():
-            raise Exception('Priority Queue is empty')
-        item = self.root.item 
-        return item
+    # Since self.size is always on a counter, we can access it immediately any time we want. This is constant time
 
     def last_node(self):
         path = bin(self.size)[3:]
@@ -93,6 +87,11 @@ class LinkMinHeap:
                 curr_node = curr_node.right
         return curr_node
 
+    def swap(self, path1, path2):
+        node1 = self.nodefinder(path1)
+        node2 = self.nodefinder(path2)
+        node1.item, node2.item = node2.item, node1.item
+
     def printree(self):
         def traverse(root):
             if (root is None):
@@ -102,6 +101,21 @@ class LinkMinHeap:
                 traverse(root.right)
                 print(root.item.priority, root.item.value)
         traverse(self.root)
+
+    def is_empty(self):
+        return self.size == 0
+
+    # is_empty simply checks if the tree is empty, and hence this is also a constant time operation, giving
+    # constant time. 
+
+    def min(self):
+        if self.is_empty():
+            raise Exception('Priority Queue is empty')
+        item = self.root.item 
+        return item
+    
+    # Since we only have to access the root, this is going to run in constant time regardless of how large the 
+    # tree is, giving worst cast O(1) time.
 
     def insert(self, priority, value = None):
         open_path = self.next_open()
@@ -123,6 +137,11 @@ class LinkMinHeap:
         self.size += 1
 
         self.fix_up(open_path)
+
+    # Actually creating the nodes and attaching them costs O(1) time. However, something tied to the insertion 
+    # of each node is the fix up function, which has to compare to each node on the tree. Since you're comparing
+    # only through the height of each tree, you'll be running O(log(n)) time, if you were to compare all the way
+    # to the top of the tree, the root.
 
     def fix_up(self, path):
         curr_path = path
@@ -162,6 +181,14 @@ class LinkMinHeap:
         self.size -=1
         return returnval
 
+    # Like insertion, the deletion function runs in constant time, but it's the fix_down function that
+    # gives it a different runtime. Since we're making comparisons through the entire tree down to the bottom
+    # level in the worst case, this means that we'll be making log(n) comparisions, giving O(log(n)).
+    # This is worst case log(n) time because since this is a heap, by defnition we'll almost be a complete search
+    # tree, meaning tha our height is going to be log(n), and hence the number of comparisons we need to make 
+    # will also be log(n) comparisons. therefore, paired with the constant time deletion of the node and the 
+    # fix_down operation, we'll be getting O(log(n)) time overall.
+
     def fix_down(self, path):
         curr_path = path
         keep_going = True
@@ -185,29 +212,11 @@ class LinkMinHeap:
                     curr_path = small_child_path
                 else:
                     keep_going = False
-                
 
-    def swap(self, path1, path2):
-        node1 = self.nodefinder(path1)
-        node2 = self.nodefinder(path2)
-        node1.item, node2.item = node2.item, node1.item
-
-def main():
-    h = LinkMinHeap()
-
-    h.insert(3,3)
-    h.insert(1,1)
-    h.insert(3,3)
-
-    print(len(h))
-    
-    h.printree()
-    print('--')
-    print(h.min().priority)
-    print(h.delete_min().priority) 
-
-    print(h.min().priority)
-    print(h.delete_min().priority)
-
-    print(h.min().priority)
-    print(h.delete_min().priority)
+# Asymptotic runtime analysis:
+# 1) Insert and delete operations: These operations run in log(n) worst case time because of the fix up and 
+# fix down operations. Becaue the heap is a nearly complete tree, therefore the height of the tree will always 
+# be log(n) height. This means that when making comparisons and traversals through the tree, including locating
+# nodes, this will take log(n) worst case time.
+# 2) len, is_empty, min operations: These operations run in O(1) time because all of these operations deal either
+# with size or the root. There is no kind of tree traversal needed, giving constant time. 
