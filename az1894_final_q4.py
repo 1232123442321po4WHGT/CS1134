@@ -1,5 +1,3 @@
-from LinkedBinaryTree import LinkedBinaryTree
-
 class LinkMinHeap:
     class Node:
         def __init__(self, item):
@@ -63,7 +61,10 @@ class LinkMinHeap:
         return self.shiftright(path)
 
     def shiftleft(self, path):
-        path += '0'
+        if (path == None):
+            path = '0'
+        else:
+            path += '0'
         return path
 
     def shiftright(self, path):
@@ -76,16 +77,16 @@ class LinkMinHeap:
 
     def rightchild(self, path):
         path = self.shiftleft(path)
-        return path + 1
+        return path
 
     def path_list(self, path):
-        return list(bin(path)[3:])
+        return list(path)
 
     def nodefinder(self, path):
         curr_node = self.root
         if path == None:
             return curr_node
-        for item in list(path):
+        for item in self.path_list(path):
             if item == '0':
                 curr_node = curr_node.left
             else:
@@ -144,18 +145,20 @@ class LinkMinHeap:
         self.swap(path1, path2)
 
         lastnode = self.nodefinder(path2)
+        returnval = lastnode.item
+
         if path1 == path2:
             self.root = None
         else:
             if lastnode.parents.right == None:
-                lastnode.parents.left == None
+                lastnode.parents.left = None
             else:
-                lastnode.parents.right == None
+                lastnode.parents.right = None
 
             self.fix_down(None)
         
-        returnval = lastnode.item
         del lastnode
+
         self.size -=1
         return returnval
 
@@ -163,7 +166,7 @@ class LinkMinHeap:
         curr_path = path
         keep_going = True
         while(keep_going == True):
-            curr_node = self.nodefinder(path)
+            curr_node = self.nodefinder(curr_path)
             if curr_node.left == None and curr_node.right == None:
                 keep_going = False
             elif curr_node.right == None:
@@ -192,14 +195,19 @@ class LinkMinHeap:
 def main():
     h = LinkMinHeap()
 
+    h.insert(3,3)
     h.insert(1,1)
     h.insert(3,3)
-    h.insert(5,5)
+
+    print(len(h))
     
     h.printree()
+    print('--')
+    print(h.min().priority)
+    print(h.delete_min().priority) 
+
     print(h.min().priority)
     print(h.delete_min().priority)
-    #print(h.min().priority)
 
-if __name__ == '__main__':
-    main()
+    print(h.min().priority)
+    print(h.delete_min().priority)
